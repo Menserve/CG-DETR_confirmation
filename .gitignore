@@ -1,0 +1,35 @@
+# Local agent/tooling metadata
+.agents/
+.claude/
+.codex/
+.git-local/
+
+# Python environments and caches
+.venv/
+__pycache__/
+*.py[cod]
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Runtime logs and local outputs
+logs/
+*.log
+
+# Large downloads and generated artifacts
+downloads/
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.ckpt
+*.pth
+*.npz
+
+# Keep lighthouse as external upstream repo (managed separately)
+lighthouse/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
