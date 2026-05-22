@@ -41,7 +41,7 @@ bash /home/menserve/CG-DETR/runbook.sh phase1_eval
 ## 4. ログ
 
 - check: `cuda: True`, `gpu: NVIDIA GeForce RTX 5090` を確認
-- 実行ログ: `logs/phase1_qvh_eval_20260521_110423.log`
+- 実行ログ: `logs/phase1_qvh_eval_20260521_121836.log`
 - 予測 jsonl: `lighthouse/results/cg_detr/qvhighlight/clip_slowfast/hl_val_submission.jsonl`
 - 指標 json: `lighthouse/results/cg_detr/qvhighlight/clip_slowfast/hl_val_submission_metrics.json`
 

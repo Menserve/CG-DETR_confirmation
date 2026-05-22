@@ -1,7 +1,7 @@
 # CANON.md — CG-DETR 独立再現プロジェクト 正典
 
 このファイルが本プロジェクトの単一参照点。他の md と矛盾があれば本ファイルが優先する。
-最終更新: 2026-05-21 (Opus, Phase 2 smoke 完了時点)
+最終更新: 2026-05-21 (Opus, 全 Phase + Bug fix A/B 完了、棄却維持確定)
 
 ---
 
@@ -68,21 +68,28 @@ team_repo で出かかっている「CG-DETR 棄却確定」を、独立環境�
 
 ---
 
-## 4. Phase 進捗
+## 4. Phase 進捗 — **全 Phase 完了 (2026-05-21)**
 
 ### Phase 0: 独立環境セットアップ — **完了**
 - 詳細: [SETUP_REPORT.md](SETUP_REPORT.md)
 
-### Phase 1: QVHighlights CG-DETR 公式 ckpt eval — **Codex 実行中**
-- 指示書: [handoff_to_codex_phase1.md](handoff_to_codex_phase1.md)
-- 完了後の出力先: `RESULTS_QVH.md`
+### Phase 1: QVHighlights CG-DETR — **完了 (A pass)**
+- 公式 ckpt eval: 5/5 metric 完全一致
+- EXP-D scratch 学習: paper 値レンジ再現 (R1@0.5=65.87, R1@0.7=51.23)
+- 結果: [RESULTS_QVH.md](RESULTS_QVH.md)
 
-### Phase 2: Clotho-moment → CASTELLA 転移 — **smoke 完了、full 待機中**
-- smoke 結果: [RESULTS_CASTELLA.md](RESULTS_CASTELLA.md)
-- smoke 結論: B1 finetune − B0 = +17.05pt R1@0.5 (smoke レベルで明確な正の転移)
-- full 実行待ち (Codex Phase 1 完了後に起動)
+### Phase 2: Clotho→CASTELLA 転移 — **完了 (B fail: gate 未達)**
+- smoke / full / multi-seed (EXP-B) / test (EXP-A) 全実施
+- B1 ft (buggy) val R1@0.7 mean 22.35±3.13 < UVCOM gate 31.82
+- 結果: [RESULTS_CASTELLA.md](RESULTS_CASTELLA.md)
 
-### 最終判定入力: [DECISION_INPUT.md](DECISION_INPUT.md) — GPT-5.5 向け
+### Bug fix A/B — **完了 (棄却維持)**
+- 中盤に lighthouse cg_detr の 2 バグを発見・修正 (Codex)
+- Stage 1 (fix ft) R1@0.7=26.42, Stage 2 (full fix) 22.73 → いずれも gate 未達
+- fix 効果 +2.56pt は gate 突破に必要な +7.96pt に不足
+- 結果: RESULTS_CASTELLA.md §4.5, DECISION_INPUT.md §4.5
+
+### 最終判定: **棄却確定を維持** — [DECISION_INPUT.md](DECISION_INPUT.md) で GPT-5.5 に最終確認を委ねる
 
 ---
 
@@ -146,12 +153,14 @@ B0 (CASTELLA, max 100ep, patience 15)
 ## 8. 不変ルール (全エージェント共通)
 
 1. `/home/menserve/compe_YCU/team_repo/` は **一切触らない** (読み取りのみ可)
-2. `lighthouse/` 配下の上流コードは **編集禁止**
+2. `lighthouse/` 配下の上流コードは **原則編集禁止**
    - 必要な変更は `train_with_override.py` のような外部 wrapper / patch に分離
+   - **例外: 明確な実装バグの修正は許可**。ただし (a) fix 内容 (before/after) (b) 影響定量 (同一 ckpt での loss 差分等) を必ず DECISION_INPUT/RESULTS に記録する。2026-05-21 の cg_detr saliency loss バグ修正がこの例外の前例。
 3. 推測で埋めず「未確認」と記録する
 4. 全コマンド・全 metric・全 artifact path をログ化する
 5. cuda:True を確認しない状態で GPU ジョブを起動しない
 6. Codex セッションと Opus セッションで **同時に GPU ジョブを走らせない** (VRAM 競合回避)
+7. **判定文書 (CANON / DECISION_INPUT / RESULTS_*) の編集は Opus が担当**。Codex は実験実行と結果報告のみ (文書編集しない)
 
 ---
 
@@ -164,12 +173,17 @@ B0 (CASTELLA, max 100ep, patience 15)
 | Codex セッションで `cuda: False` (NVML init fail) | WSL2/VSCode 再起動 + 権限設定 |
 | Clotho-moment 特徴量は 2 path に分散 | symlink は `features/features/clotho-moment/clap` (51240 files の方) を使う |
 | QVH features zip は `QVHighlight/` で展開される | `lighthouse/features/qvhighlight` から symlink |
+| cg_detr saliency loss / models.py に実装バグ (2026-05-21 修正済) | fix 済。詳細は DECISION_INPUT §4.5。buggy 結果と fix 結果は両方保持 |
 
 ---
 
-## 10. 次のアクション (2026-05-21 現在)
+## 10. 最終状態 (2026-05-21 全 Phase + Bug fix A/B 完了)
 
-1. **Codex**: Phase 1 eval 実行 → `RESULTS_QVH.md` 作成
-2. **Opus**: Codex 完了通知後に `phase2_full` 起動 (~100分)
-3. **Opus**: 完了後 `RESULTS_CASTELLA.md` 更新、`DECISION_INPUT.md` 最終化
-4. **GPT-5.5**: `DECISION_INPUT.md` を読んで判定 (棄却確定 / 再考 / 保留)
+### 結論
+- **A (Phase 1)**: Pass / **B (Phase 2)**: Fail (gate 未達) → **棄却確定を維持**
+- bug fix 後も R1@0.7 最良 26.42 < UVCOM gate 31.82 (詳細 DECISION_INPUT §4.5)
+
+### 残アクション
+1. **GPT-5.5**: [DECISION_INPUT.md](DECISION_INPUT.md) を読んで最終判定 (棄却維持を確認 / 異議)
+2. **Opus**: GPT-5.5 判定後、必要なら team_repo governance へのフィードバック案作成
+3. (将来) 再考トリガー (DECISION_INPUT §6) に該当する事象が出たら再開
