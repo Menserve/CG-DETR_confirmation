@@ -62,9 +62,9 @@ team_repo で出かかっている「CG-DETR 棄却確定」を、独立環境�
 
 | 担当 | 範囲 | 状態 |
 |------|------|------|
-| **Opus** (このセッション) | Phase 0 setup / Phase 2 実行 / 結果文書化 / DECISION_INPUT 作成 | Phase 0 完了、Phase 2 smoke 完了、Phase 2 full 起動待機中 |
-| **Codex** (別セッション) | Phase 1 (QVH eval) / Phase 2 補助デバッグ | Phase 1 実行中 (権限調整後) |
-| **GPT-5.5** | DECISION_INPUT.md を読んで最終判定 | 全 Phase 完了後 |
+| **Opus** (このセッション) | Phase 0 setup / Phase 2 実行 / 結果文書化 / DECISION_INPUT 作成 | 完了 (全 Phase + 追加実験 + Bug fix A/B 文書化) |
+| **Codex** (別セッション) | Phase 1 (QVH eval) / Phase 2 補助デバッグ | 完了 (Phase 1 実行・Bug fix 検証支援) |
+| **GPT-5.5** | DECISION_INPUT.md を読んで最終判定 | 完了 (2026-05-23: 棄却維持を承認) |
 
 ---
 
@@ -99,8 +99,8 @@ team_repo で出かかっている「CG-DETR 棄却確定」を、独立環境�
 |---------|------|------|
 | **正典** | `CANON.md` | このファイル (単一参照点) |
 | 文書 | `SETUP_REPORT.md` | Phase 0 セットアップ詳細・MD5 ハッシュ |
-| 文書 | `RESULTS_CASTELLA.md` | Phase 2 smoke 結果 |
-| 文書 | `RESULTS_QVH.md` | Phase 1 結果 (Codex 作成予定) |
+| 文書 | `RESULTS_CASTELLA.md` | Phase 2 full/multi-seed/test + Bug fix A/B 結果 |
+| 文書 | `RESULTS_QVH.md` | Phase 1 結果 (Codex 作成済み) |
 | 文書 | `DECISION_INPUT.md` | GPT-5.5 向け判定要約 |
 | Codex 指示書 | `handoff_to_codex_phase1.md` | Phase 1 委託内容 |
 | 旧 Codex 指示書 | `handoff_to_codex.md` | (Phase 0→Codex 引継時のもの、参考) |
